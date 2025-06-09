@@ -2,6 +2,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { Habit } from '@shared/schema';
+import { StreakBadge } from './streak-badge';
 
 interface HabitCardProps {
   habit: Habit;
@@ -28,17 +29,9 @@ export function HabitCard({ habit, onToggle, onDelete }: HabitCardProps) {
             {habit.name}
           </h3>
           <div className="flex items-center gap-2 mt-1">
-            <span className={`text-sm ${habit.completed ? 'text-green-600' : 'text-gray-500'}`}>
-              Streak:
-            </span>
-            {habit.streak > 0 ? (
-              <span className="bg-primary text-white text-xs px-2 py-1 rounded-full font-medium">
-                {habit.streak} day{habit.streak !== 1 ? 's' : ''}
-              </span>
-            ) : (
-              <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
-                Start today!
-              </span>
+            <StreakBadge streak={habit.streak} />
+            {habit.streak === 0 && (
+              <span className="text-xs text-gray-500">Start today!</span>
             )}
           </div>
         </div>

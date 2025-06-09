@@ -7,6 +7,7 @@ import { StatsSection } from '@/components/stats-section';
 import { ConfirmationModal } from '@/components/confirmation-modal';
 import { DailyReflection } from '@/components/daily-reflection';
 import { HabitCalendar } from '@/components/habit-calendar';
+import { ProgressChart } from '@/components/progress-chart';
 
 export default function Home() {
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
@@ -69,9 +70,9 @@ export default function Home() {
           <AddHabitForm onAddHabit={handleAddHabit} />
         </div>
 
-        {/* Main Content - 2x2 Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Top Left - Habits List or Empty State */}
+        {/* Main Content - 3 Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          {/* Left Column - Habits List */}
           <div className="space-y-3">
             {habits.length === 0 ? (
               <div className="text-center py-12">
@@ -93,16 +94,13 @@ export default function Home() {
             )}
           </div>
 
-          {/* Top Right - Calendar */}
-          <div>
+          {/* Middle Column - Calendar and Stats */}
+          <div className="space-y-6">
             <HabitCalendar 
               onDateSelect={handleDateSelect} 
               refreshTrigger={calendarRefresh}
             />
-          </div>
-
-          {/* Bottom Left - Stats Section */}
-          <div>
+            
             {habits.length > 0 ? (
               <StatsSection
                 completed={stats.completed}
@@ -119,8 +117,10 @@ export default function Home() {
             )}
           </div>
 
-          {/* Bottom Right - Daily Reflection */}
-          <div>
+          {/* Right Column - Progress Chart and Daily Reflection */}
+          <div className="space-y-6">
+            <ProgressChart refreshTrigger={calendarRefresh} />
+            
             <DailyReflection 
               date={selectedDate || undefined} 
               onReflectionChange={handleReflectionChange}
