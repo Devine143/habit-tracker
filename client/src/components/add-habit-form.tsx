@@ -3,45 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Target, Zap, Calendar, Trophy } from 'lucide-react';
+import { Plus, Target, Calendar } from 'lucide-react';
 
 interface AddHabitFormProps {
   onAddHabit: (name: string) => void;
 }
 
-const popularHabits = [
-  'Drink 8 glasses of water',
-  'Exercise for 30 minutes',
-  'Read for 20 minutes',
-  'Meditate',
-  'Write in journal',
-  'Take vitamins'
-];
 
-const motivationalTips = [
-  "Start small and build momentum",
-  "Consistency beats perfection",
-  "Track your progress daily",
-  "Celebrate small wins"
-];
 
 export function AddHabitForm({ onAddHabit }: AddHabitFormProps) {
   const [habitName, setHabitName] = useState('');
-  const [currentTip, setCurrentTip] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (habitName.trim()) {
       onAddHabit(habitName.trim());
       setHabitName('');
-      // Cycle through tips when adding a habit
-      setCurrentTip((prev) => (prev + 1) % motivationalTips.length);
     }
-  };
-
-  const handleQuickAdd = (habit: string) => {
-    onAddHabit(habit);
-    setCurrentTip((prev) => (prev + 1) % motivationalTips.length);
   };
 
   return (
@@ -71,39 +49,6 @@ export function AddHabitForm({ onAddHabit }: AddHabitFormProps) {
             <Plus className="w-4 h-4" />
           </Button>
         </form>
-
-        {/* Popular Habits */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Zap className="w-3 h-3 text-orange-500" />
-            <span className="text-xs font-medium text-gray-700">Quick Add</span>
-          </div>
-          <div className="grid grid-cols-1 gap-1">
-            {popularHabits.slice(0, 3).map((habit, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAdd(habit)}
-                className="justify-start text-xs h-7 px-2"
-              >
-                <Plus className="w-3 h-3 mr-1" />
-                {habit}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 rounded-lg border-l-4 border-green-500">
-          <div className="flex items-center gap-2 mb-2">
-            <Trophy className="w-4 h-4 text-green-600" />
-            <span className="text-sm font-medium text-green-800">Daily Motivation</span>
-          </div>
-          <p className="text-xs text-green-700 italic">
-            {motivationalTips[currentTip]}
-          </p>
-        </div>
 
         {/* Tips */}
         <div className="space-y-2">
