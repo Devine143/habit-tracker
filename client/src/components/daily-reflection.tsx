@@ -48,6 +48,7 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
       });
       
       setIsEditing(false);
+      onReflectionChange?.(); // Notify parent that reflection changed
       toast({
         title: "Reflection saved",
         description: "Your daily reflection has been saved successfully.",
