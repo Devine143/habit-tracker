@@ -73,8 +73,10 @@ export function useDatabaseHabits() {
       return response.json();
     },
     onSuccess: () => {
+      // Force refresh of both queries to ensure UI updates
       queryClient.invalidateQueries({ queryKey: ['/api/habit-completions'] });
       queryClient.invalidateQueries({ queryKey: ['/api/habits'] });
+      queryClient.refetchQueries({ queryKey: ['/api/habit-completions'] });
     },
   });
 
