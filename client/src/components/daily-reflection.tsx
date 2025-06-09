@@ -14,21 +14,21 @@ interface DailyReflectionProps {
 }
 
 export function DailyReflection({ date, className = '', onReflectionChange }: DailyReflectionProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [noteText, setNoteText] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  
   const targetDate = date || new Date().toDateString();
   const isToday = targetDate === new Date().toDateString();
   const { getNoteForDate, saveNote } = useDailyNotes();
   const { toast } = useToast();
-  
-  const [isEditing, setIsEditing] = useState(false);
-  const [noteText, setNoteText] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const existingNote = getNoteForDate(targetDate);
     const newNoteText = existingNote ? existingNote.note : '';
     setNoteText(newNoteText);
     setIsEditing(false);
-  }, [targetDate]);
+  }, [targetDate, getNoteForDate]);
 
   const handleSave = async () => {
     if (noteText.trim() === '') {
@@ -83,12 +83,12 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
   const hasNote = noteText.trim() !== '';
 
   return (
-    <Card className={`w-full ${className}`}>
+    <Card className={`w-full h-fit ${className}`}>
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between text-lg">
+        <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-purple-600" />
-            Daily Reflection
+            <BookOpen className="w-4 h-4 text-purple-600" />
+            <span className="text-sm font-semibold">Daily Reflection</span>
           </div>
           {isToday && (
             <Badge variant="secondary" className="text-xs">

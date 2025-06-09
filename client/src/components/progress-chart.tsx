@@ -35,7 +35,7 @@ export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressCh
   }, [chartData]);
 
   return (
-    <Card className={`w-full ${className}`}>
+    <Card className={`w-full h-fit ${className}`}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">

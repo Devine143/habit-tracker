@@ -91,8 +91,8 @@ export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <Card className={`w-full ${className}`}>
-      <CardHeader className="pb-2">
+    <Card className={`w-full h-fit ${className}`}>
+      <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-purple-600" />

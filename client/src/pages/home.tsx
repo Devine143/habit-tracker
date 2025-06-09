@@ -71,11 +71,11 @@ export default function Home() {
         </div>
 
         {/* Main Content - Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-start">
           {/* Left Column - Habits List */}
-          <div className="space-y-3">
+          <div className="space-y-3 min-h-[400px]">
             {habits.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="bg-white rounded-lg border p-8 text-center h-full flex flex-col justify-center">
                 <div className="text-4xl mb-4">🎯</div>
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">No habits yet</h3>
                 <p className="text-gray-500 text-sm">
@@ -108,7 +108,7 @@ export default function Home() {
                 rate={stats.rate}
               />
             ) : (
-              <div className="text-center py-8">
+              <div className="bg-white rounded-lg border p-8 text-center">
                 <div className="text-2xl mb-2">📊</div>
                 <p className="text-gray-500 text-sm">
                   Stats will appear here when you have habits to track

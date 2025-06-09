@@ -40,7 +40,7 @@ export function StatsSection({ completed, total, rate }: StatsSectionProps) {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-fit">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <BarChart3 className="w-4 h-4 text-blue-600" />
