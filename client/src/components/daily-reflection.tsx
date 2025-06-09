@@ -148,7 +148,7 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
               <label className="text-sm font-medium text-gray-700">
                 {isToday ? "How was your day? What did you learn?" : "Add your thoughts about this day"}
               </label>
-              <textarea
+              <Textarea
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
                 placeholder={
@@ -156,7 +156,7 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
                     ? "Share your thoughts, challenges, wins, or anything that stood out today..."
                     : "Add your reflection or notes for this day..."
                 }
-                className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                className="min-h-[120px] resize-none"
                 maxLength={1000}
               />
               <div className="text-xs text-gray-500 text-right">
