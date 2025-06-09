@@ -1,40 +1,37 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { HabitStorage } from '@/lib/habit-storage';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 interface ProgressChartProps {
   className?: string;
   refreshTrigger?: number;
 }
 
+type ViewPeriod = 3 | 7 | 14;
+
 export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressChartProps) {
+  const [selectedPeriod, setSelectedPeriod] = useState<ViewPeriod>(7);
+
   const chartData = useMemo(() => {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 13); // Last 14 days
+    startDate.setDate(endDate.getDate() - (selectedPeriod - 1)); // Last N days
     
     const data = HabitStorage.getCompletionRateForDateRange(startDate, endDate);
     
-    // Debug logging
-    console.log('Progress Chart Debug:', {
-      startDate: startDate.toDateString(),
-      endDate: endDate.toDateString(),
-      rawData: data,
-      dataLength: data.length
-    });
-    
     return data.map(d => ({
       date: new Date(d.date).toLocaleDateString('en-US', { 
-        month: 'short', 
+        month: selectedPeriod <= 7 ? 'short' : 'numeric',
         day: 'numeric' 
       }),
       rate: d.rate,
       completed: d.completed,
       total: d.total
     }));
-  }, [refreshTrigger]);
+  }, [refreshTrigger, selectedPeriod]);
 
   const averageRate = useMemo(() => {
     if (chartData.length === 0) return 0;
@@ -50,12 +47,27 @@ export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressCh
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-semibold">14-Day Progress</span>
+            <span className="text-sm font-semibold">{selectedPeriod}-Day Progress</span>
           </div>
           <div className="text-sm text-gray-500">
             Avg: {averageRate}%
           </div>
         </CardTitle>
+        
+        {/* Period Selection Buttons */}
+        <div className="flex gap-1 mt-2">
+          {([3, 7, 14] as ViewPeriod[]).map((period) => (
+            <Button
+              key={period}
+              variant={selectedPeriod === period ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedPeriod(period)}
+              className="text-xs px-2 py-1 h-6"
+            >
+              {period}d
+            </Button>
+          ))}
+        </div>
       </CardHeader>
       
       <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
@@ -67,7 +79,7 @@ export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressCh
                 <XAxis 
                   dataKey="date" 
                   tick={{ fontSize: 10 }}
-                  interval="preserveStartEnd"
+                  interval={selectedPeriod === 3 ? 0 : selectedPeriod === 7 ? 0 : "preserveStartEnd"}
                   height={30}
                 />
                 <YAxis 
