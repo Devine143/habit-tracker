@@ -82,6 +82,9 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
 
   const hasNote = noteText.trim() !== '';
 
+  // Debug logging
+  console.log('DailyReflection render:', { isEditing, hasNote, noteText: noteText.length });
+
   return (
     <Card className={`w-full ${className}`}>
       <CardHeader className="pb-3">
@@ -112,7 +115,10 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
               {isToday ? "How did your day go?" : "No reflection for this day"}
             </p>
             <Button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                console.log('Setting isEditing to true');
+                setIsEditing(true);
+              }}
               variant="outline"
               size="sm"
               className="gap-2"
