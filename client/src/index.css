@@ -73,4 +73,14 @@
   .border-success {
     border-color: var(--success);
   }
+
+  /* Fixed layout utilities */
+  .layout-fixed {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .layout-fixed > * {
+    flex-shrink: 0;
+  }
 }

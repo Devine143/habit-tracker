@@ -71,16 +71,16 @@ export default function Home() {
         </div>
 
         {/* Main Content - Three Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 h-[600px] overflow-hidden">
           {/* Left Column - Habits (top half) and Progress Stats (bottom half) */}
           <div className="flex flex-col h-full gap-6">
             {/* Habits Section - Top Half */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 max-h-[280px]">
               <div className="bg-white rounded-lg border h-full flex flex-col">
-                <div className="p-4 border-b">
+                <div className="p-4 border-b flex-shrink-0">
                   <h3 className="text-sm font-semibold text-gray-700">Your Habits</h3>
                 </div>
-                <div className="flex-1 overflow-y-auto p-3">
+                <div className="flex-1 overflow-y-auto p-3 min-h-0">
                   {habits.length === 0 ? (
                     <div className="text-center py-12">
                       <div className="text-4xl mb-4">🎯</div>
@@ -106,7 +106,7 @@ export default function Home() {
             </div>
 
             {/* Progress Stats Section - Bottom Half */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 max-h-[280px]">
               {habits.length > 0 ? (
                 <StatsSection
                   completed={stats.completed}
@@ -136,7 +136,7 @@ export default function Home() {
           {/* Right Column - Progress Chart (top half) and Daily Reflection (bottom half) */}
           <div className="flex flex-col h-full gap-6">
             {/* Progress Chart - Top Half */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 max-h-[280px]">
               <ProgressChart 
                 className="h-full"
                 refreshTrigger={calendarRefresh} 
@@ -144,7 +144,7 @@ export default function Home() {
             </div>
             
             {/* Daily Reflection - Bottom Half */}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 max-h-[280px]">
               <DailyReflection 
                 className="h-full"
                 date={selectedDate || undefined} 
