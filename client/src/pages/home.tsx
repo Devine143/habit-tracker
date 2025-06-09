@@ -8,7 +8,7 @@ import { ConfirmationModal } from '@/components/confirmation-modal';
 import { DailyReflection } from '@/components/daily-reflection';
 import { HabitCalendar } from '@/components/habit-calendar';
 import { ProgressChart } from '@/components/progress-chart';
-import { AIAssistant } from '@/components/ai-assistant';
+import { AIAssistantWidget } from '@/components/ai-assistant-widget';
 
 export default function Home() {
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
@@ -66,9 +66,12 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto px-3 md:px-4 pb-6 md:pb-20 safe-area-bottom">
-        {/* Add Habit Form */}
-        <div className="max-w-md mx-auto">
+        {/* Add Habit Form and AI Assistant */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
           <AddHabitForm onAddHabit={handleAddHabit} />
+          <div className="min-h-[200px]">
+            <AIAssistantWidget className="h-full" />
+          </div>
         </div>
 
         {/* Mobile Layout - Stack vertically on small screens */}
@@ -145,15 +148,11 @@ export default function Home() {
               onReflectionChange={handleReflectionChange}
             />
           </div>
-          
-          {/* AI Assistant Section */}
-          <div className="min-h-[320px] md:min-h-[350px] touch-optimized">
-            <AIAssistant className="h-full" />
-          </div>
+
         </div>
 
-        {/* Desktop Layout - Four Column Layout for large screens */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4 mt-6 h-[600px] overflow-hidden">
+        {/* Desktop Layout - Three Column Layout for large screens */}
+        <div className="hidden lg:grid lg:grid-cols-3 gap-6 mt-6 h-[600px] overflow-hidden">
           {/* Left Column - Habits (top half) and Progress Stats (bottom half) */}
           <div className="flex flex-col h-full">
             {/* Habits Section - Top Half */}
@@ -206,7 +205,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Calendar Column - Full Height */}
+          {/* Middle Column - Calendar (Full Height) */}
           <div className="h-full">
             <HabitCalendar 
               className="h-full"
@@ -215,7 +214,7 @@ export default function Home() {
             />
           </div>
 
-          {/* Progress Chart and Daily Reflection Column */}
+          {/* Right Column - Progress Chart (top half) and Daily Reflection (bottom half) */}
           <div className="flex flex-col h-full">
             {/* Progress Chart - Top Half */}
             <div className="h-[287px] mb-6">
@@ -233,11 +232,6 @@ export default function Home() {
                 onReflectionChange={handleReflectionChange}
               />
             </div>
-          </div>
-          
-          {/* AI Assistant Column - Full Height */}
-          <div className="h-full">
-            <AIAssistant className="h-full" />
           </div>
         </div>
       </main>
