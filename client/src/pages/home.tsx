@@ -84,14 +84,14 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-3">
-            {user && (
+            {user ? (
               <div className="text-right">
                 <p className="text-sm font-medium">
                   {(user as any)?.firstName || (user as any)?.email || 'User'}
                 </p>
                 <p className="text-xs text-purple-200">Welcome back!</p>
               </div>
-            )}
+            ) : null}
             <Button
               variant="ghost"
               size="sm"
