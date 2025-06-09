@@ -40,13 +40,8 @@ export class AIService {
         period
       };
 
-      const response = await apiRequest({
-        url: '/api/ai/analyze-progress',
-        method: 'POST',
-        body: requestData
-      });
-
-      return response as ProgressAnalysis;
+      const response = await apiRequest('POST', '/api/ai/analyze-progress', requestData);
+      return await response.json() as ProgressAnalysis;
     } catch (error) {
       console.error('Error analyzing progress:', error);
       throw new Error('Failed to analyze progress. Please try again.');
@@ -70,13 +65,8 @@ export class AIService {
         endDate: endDate.toISOString()
       };
 
-      const response = await apiRequest({
-        url: '/api/ai/summarize-reflections',
-        method: 'POST',
-        body: requestData
-      });
-
-      return response as ReflectionSummary;
+      const response = await apiRequest('POST', '/api/ai/summarize-reflections', requestData);
+      return await response.json() as ReflectionSummary;
     } catch (error) {
       console.error('Error summarizing reflections:', error);
       throw new Error('Failed to summarize reflections. Please try again.');
@@ -101,13 +91,9 @@ export class AIService {
         recentData
       };
 
-      const response = await apiRequest({
-        url: '/api/ai/ask-question',
-        method: 'POST',
-        body: requestData
-      });
-
-      return response.answer || 'Sorry, I could not process your question.';
+      const response = await apiRequest('POST', '/api/ai/ask-question', requestData);
+      const data = await response.json();
+      return data.answer || 'Sorry, I could not process your question.';
     } catch (error) {
       console.error('Error processing question:', error);
       throw new Error('Failed to process your question. Please try again.');
