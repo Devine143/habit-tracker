@@ -14,7 +14,7 @@ import { AIAssistantWidget } from '@/components/ai-assistant-widget';
 
 export default function Home() {
   const { user } = useAuth();
-  const { habits, addHabit, toggleHabit, deleteHabit, rate, getCompletionStatsForDate } = useDatabaseHabits();
+  const { habits, completions, addHabit, toggleHabit, deleteHabit, rate, getCompletionStatsForDate } = useDatabaseHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarRefresh, setCalendarRefresh] = useState(0);
@@ -54,7 +54,7 @@ export default function Home() {
   const handleHabitToggle = (habitId: number) => {
     const today = new Date().toISOString().split('T')[0];
     // Check if this habit is completed today by looking at completions data
-    const todayCompletion = completions.find(c => 
+    const todayCompletion = completions.find((c: any) => 
       c.habitId === habitId && c.date === today
     );
     const isCurrentlyCompleted = todayCompletion?.completed || false;
@@ -136,14 +136,25 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {habits.map(habit => (
-                    <HabitCard
-                      key={habit.id}
-                      habit={habit}
-                      onToggle={handleHabitToggle}
-                      onDelete={handleDeleteHabit}
-                    />
-                  ))}
+                  {habits.map(habit => {
+                    // Get today's completion status for this habit
+                    const todayCompletion = completions.find((c: any) => 
+                      c.habitId === habit.id && c.date === today
+                    );
+                    const habitWithTodayCompletion = {
+                      ...habit,
+                      completed: todayCompletion?.completed || false
+                    };
+                    
+                    return (
+                      <HabitCard
+                        key={habit.id}
+                        habit={habitWithTodayCompletion}
+                        onToggle={handleHabitToggle}
+                        onDelete={handleDeleteHabit}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </div>
