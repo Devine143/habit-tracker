@@ -123,15 +123,28 @@ Focus on patterns, consistency, and actionable insights. Be encouraging but hone
 
 export async function summarizeReflections(req: Request, res: Response) {
   try {
-    const { reflections, startDate, endDate } = req.body;
+    const { startDate, endDate } = req.body;
+    const userId = (req as any).user.claims.sub;
 
-    const periodStr = `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`;
+    // Fetch user's reflections from database
+    const reflections = await storage.getUserDailyNotes(userId);
+
+    // Filter reflections for the specified period
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    const periodReflections = reflections.filter(r => {
+      const noteDate = new Date(r.date);
+      return noteDate >= start && noteDate <= end;
+    });
+
+    const periodStr = `${start.toLocaleDateString()} to ${end.toLocaleDateString()}`;
 
     const prompt = `
 Analyze the following daily reflections from ${periodStr}:
 
 REFLECTIONS:
-${reflections.map((r: DailyNote) => `${r.date}: ${r.note}`).join('\n\n')}
+${periodReflections.map((r: DailyNote) => `${r.date}: ${r.note}`).join('\n\n')}
 
 Please provide a JSON response with the following structure:
 {
@@ -171,7 +184,26 @@ Focus on identifying patterns, emotional trends, recurring themes, and actionabl
 
 export async function askQuestion(req: Request, res: Response) {
   try {
-    const { question, context, habits, recentReflections, recentData } = req.body;
+    const { question, context } = req.body;
+    const userId = (req as any).user.claims.sub;
+
+    // Fetch user's data from database
+    const habits = await storage.getUserHabits(userId);
+    const completions = await storage.getUserHabitCompletions(userId);
+    const reflections = await storage.getUserDailyNotes(userId);
+
+    // Calculate recent progress (last 7 days)
+    const recentData = calculateCompletionRates(habits, completions, 7);
+
+    // Get recent reflections (last 7 days)
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6);
+    
+    const recentReflections = reflections.filter(r => {
+      const noteDate = new Date(r.date);
+      return noteDate >= startDate && noteDate <= endDate;
+    });
 
     const contextPrompt = `
 CURRENT HABITS:

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CheckCircle, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useHabits } from '@/hooks/use-habits';
+import { useDatabaseHabits } from '@/hooks/use-database-habits';
 import { AddHabitForm } from '@/components/add-habit-form';
 import { HabitCard } from '@/components/habit-card';
 import { StatsSection } from '@/components/stats-section';
