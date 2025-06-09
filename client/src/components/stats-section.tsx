@@ -48,7 +48,7 @@ export function StatsSection({ completed, total, rate }: StatsSectionProps) {
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
+      <CardContent className="pt-0 flex-1 flex flex-col justify-center min-h-0">
         <div className="space-y-4">
           {/* Today's Progress Bar */}
           <div className="space-y-2">
