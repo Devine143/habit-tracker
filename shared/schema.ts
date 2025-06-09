@@ -35,8 +35,39 @@ export const users = pgTable("users", {
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
+// Database table definitions
+export const habits = pgTable("habits", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  completed: boolean("completed").default(false),
+  streak: integer("streak").default(0),
+  lastCompleted: varchar("last_completed"),
+  createdDate: varchar("created_date").notNull(),
+});
+
+export const dailyNotes = pgTable("daily_notes", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  date: varchar("date").notNull(),
+  note: text("note").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const habitCompletions = pgTable("habit_completions", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  habitId: integer("habit_id").notNull().references(() => habits.id, { onDelete: "cascade" }),
+  date: varchar("date").notNull(),
+  completed: boolean("completed").notNull(),
+  completedAt: timestamp("completed_at").defaultNow(),
+});
+
+// Zod schemas for validation
 export const habitSchema = z.object({
   id: z.number(),
+  userId: z.string(),
   name: z.string(),
   completed: z.boolean(),
   streak: z.number(),
@@ -53,6 +84,7 @@ export const insertHabitSchema = habitSchema.omit({
 
 export const dailyNoteSchema = z.object({
   id: z.number(),
+  userId: z.string(),
   date: z.string(),
   note: z.string(),
   createdAt: z.string(),
@@ -67,6 +99,7 @@ export const insertDailyNoteSchema = dailyNoteSchema.omit({
 
 export const habitCompletionSchema = z.object({
   id: z.number(),
+  userId: z.string(),
   habitId: z.number(),
   date: z.string(),
   completed: z.boolean(),
