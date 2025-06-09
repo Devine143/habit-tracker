@@ -106,7 +106,7 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
       
       <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
         {!isEditing && !hasNote && (
-          <div className="text-center py-6">
+          <div className="text-center py-6 flex-1 flex flex-col justify-center">
             <div className="text-4xl mb-3">💭</div>
             <p className="text-gray-500 text-sm mb-4">
               {isToday ? "How did your day go?" : "No reflection for this day"}
@@ -124,47 +124,53 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
         )}
 
         {!isEditing && hasNote && (
-          <div className="space-y-4">
-            <div className="bg-gray-50 rounded-lg p-4 border">
-              <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                {noteText}
-              </p>
+          <div className="flex flex-col h-full min-h-0">
+            <div className="flex-1 overflow-y-auto min-h-0 mb-4">
+              <div className="bg-gray-50 rounded-lg p-4 border">
+                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                  {noteText}
+                </p>
+              </div>
             </div>
-            <Button
-              onClick={() => setIsEditing(true)}
-              variant="outline"
-              size="sm"
-              className="gap-2"
-            >
-              <Edit3 className="w-4 h-4" />
-              Edit reflection
-            </Button>
+            <div className="flex-shrink-0">
+              <Button
+                onClick={() => setIsEditing(true)}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Edit3 className="w-4 h-4" />
+                Edit reflection
+              </Button>
+            </div>
           </div>
         )}
 
         {isEditing && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                {isToday ? "How was your day? What did you learn?" : "Add your thoughts about this day"}
-              </label>
-              <Textarea
-                value={noteText}
-                onChange={(e) => setNoteText(e.target.value)}
-                placeholder={
-                  isToday 
-                    ? "Share your thoughts, challenges, wins, or anything that stood out today..."
-                    : "Add your reflection or notes for this day..."
-                }
-                className="min-h-[120px] resize-none"
-                maxLength={1000}
-              />
-              <div className="text-xs text-gray-500 text-right">
-                {noteText.length}/1000 characters
+          <div className="flex flex-col h-full min-h-0">
+            <div className="flex-1 overflow-y-auto min-h-0 mb-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  {isToday ? "How was your day? What did you learn?" : "Add your thoughts about this day"}
+                </label>
+                <Textarea
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  placeholder={
+                    isToday 
+                      ? "Share your thoughts, challenges, wins, or anything that stood out today..."
+                      : "Add your reflection or notes for this day..."
+                  }
+                  className="min-h-[100px] max-h-[200px] resize-none"
+                  maxLength={1000}
+                />
+                <div className="text-xs text-gray-500 text-right">
+                  {noteText.length}/1000 characters
+                </div>
               </div>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-shrink-0">
               <Button
                 onClick={handleSave}
                 disabled={isSaving || noteText.trim() === ''}
