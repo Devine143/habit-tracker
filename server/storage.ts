@@ -97,18 +97,34 @@ export class DatabaseStorage implements IStorage {
   }
 
   async saveDailyNote(userId: string, note: Omit<InsertDailyNote, 'userId'>): Promise<DailyNote> {
-    const [savedNote] = await db
-      .insert(dailyNotes)
-      .values({ ...note, userId })
-      .onConflictDoUpdate({
-        target: [dailyNotes.userId, dailyNotes.date],
-        set: {
+    // First check if a note exists for this user and date
+    const [existingNote] = await db
+      .select()
+      .from(dailyNotes)
+      .where(and(eq(dailyNotes.userId, userId), eq(dailyNotes.date, note.date)));
+
+    if (existingNote) {
+      // Update existing note
+      const [updatedNote] = await db
+        .update(dailyNotes)
+        .set({
           note: note.note,
           updatedAt: new Date(),
-        },
-      })
-      .returning();
-    return savedNote;
+        })
+        .where(and(eq(dailyNotes.userId, userId), eq(dailyNotes.date, note.date)))
+        .returning();
+      return updatedNote;
+    } else {
+      // Insert new note
+      const [newNote] = await db
+        .insert(dailyNotes)
+        .values({
+          userId,
+          ...note,
+        })
+        .returning();
+      return newNote;
+    }
   }
 
   async deleteDailyNote(userId: string, date: string): Promise<void> {
@@ -133,18 +149,42 @@ export class DatabaseStorage implements IStorage {
   }
 
   async recordHabitCompletion(userId: string, completion: Omit<InsertHabitCompletion, 'userId'>): Promise<HabitCompletion> {
-    const [newCompletion] = await db
-      .insert(habitCompletions)
-      .values({ ...completion, userId })
-      .onConflictDoUpdate({
-        target: [habitCompletions.userId, habitCompletions.habitId, habitCompletions.date],
-        set: {
+    // First check if a completion exists for this user, habit, and date
+    const [existing] = await db
+      .select()
+      .from(habitCompletions)
+      .where(and(
+        eq(habitCompletions.userId, userId),
+        eq(habitCompletions.habitId, completion.habitId),
+        eq(habitCompletions.date, completion.date)
+      ));
+
+    if (existing) {
+      // Update existing completion
+      const [updatedCompletion] = await db
+        .update(habitCompletions)
+        .set({
           completed: completion.completed,
           completedAt: new Date(),
-        },
-      })
-      .returning();
-    return newCompletion;
+        })
+        .where(and(
+          eq(habitCompletions.userId, userId),
+          eq(habitCompletions.habitId, completion.habitId),
+          eq(habitCompletions.date, completion.date)
+        ))
+        .returning();
+      return updatedCompletion;
+    } else {
+      // Insert new completion
+      const [newCompletion] = await db
+        .insert(habitCompletions)
+        .values({
+          userId,
+          ...completion,
+        })
+        .returning();
+      return newCompletion;
+    }
   }
 }
 
