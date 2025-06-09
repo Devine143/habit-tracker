@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 import { useHabits } from '@/hooks/use-habits';
 import { AddHabitForm } from '@/components/add-habit-form';
 import { HabitCard } from '@/components/habit-card';
@@ -11,10 +13,15 @@ import { ProgressChart } from '@/components/progress-chart';
 import { AIAssistantWidget } from '@/components/ai-assistant-widget';
 
 export default function Home() {
+  const { user } = useAuth();
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarRefresh, setCalendarRefresh] = useState(0);
+
+  const handleSignOut = () => {
+    window.location.href = '/api/logout';
+  };
 
   const handleAddHabit = (name: string) => {
     const today = new Date().toDateString();
@@ -54,14 +61,38 @@ export default function Home() {
     <div className="bg-gray-50 min-h-screen safe-area-inset">
       {/* Header */}
       <header className="bg-primary text-white px-4 py-4 md:py-6 shadow-lg safe-area-inset">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-xl md:text-2xl font-bold text-center flex items-center justify-center gap-2">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5 md:w-6 md:h-6" />
-            Habit Tracker
-          </h1>
-          <p className="text-purple-100 text-center mt-1 text-xs md:text-sm">
-            Build better habits, one day at a time
-          </p>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold">Habit Tracker</h1>
+              <p className="text-purple-100 text-xs md:text-sm">
+                Build better habits, one day at a time
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {user && (
+              <div className="text-right">
+                <p className="text-sm font-medium">
+                  {user.firstName || user.email || 'User'}
+                </p>
+                <p className="text-xs text-purple-200">
+                  Welcome back!
+                </p>
+              </div>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignOut}
+              className="text-white hover:bg-purple-700 flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </Button>
+          </div>
         </div>
       </header>
 
