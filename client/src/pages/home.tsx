@@ -58,59 +58,58 @@ export default function Home() {
           <AddHabitForm onAddHabit={handleAddHabit} />
         </div>
 
-        {/* Empty State */}
-        {habits.length === 0 && (
-          <div className="text-center py-12 max-w-md mx-auto">
-            <div className="text-6xl mb-4">🎯</div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">No habits yet</h3>
-            <p className="text-gray-500 text-sm">
-              Add your first habit above to get started on your journey!
-            </p>
-          </div>
-        )}
-
-        {/* Daily Reflection - Show when no habits */}
-        {habits.length === 0 && (
-          <div className="mt-6 max-w-2xl mx-auto">
-            <DailyReflection />
-          </div>
-        )}
-
         {/* Main Content - 2x2 Grid */}
-        {habits.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            {/* Top Left - Habits List */}
-            <div className="space-y-3">
-              {habits.map(habit => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          {/* Top Left - Habits List or Empty State */}
+          <div className="space-y-3">
+            {habits.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">🎯</div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">No habits yet</h3>
+                <p className="text-gray-500 text-sm">
+                  Your habits will appear here once you add them!
+                </p>
+              </div>
+            ) : (
+              habits.map(habit => (
                 <HabitCard
                   key={habit.id}
                   habit={habit}
                   onToggle={toggleHabit}
                   onDelete={handleDeleteHabit}
                 />
-              ))}
-            </div>
+              ))
+            )}
+          </div>
 
-            {/* Top Right - Calendar */}
-            <div>
-              <HabitCalendar onDateSelect={handleDateSelect} />
-            </div>
+          {/* Top Right - Calendar */}
+          <div>
+            <HabitCalendar onDateSelect={handleDateSelect} />
+          </div>
 
-            {/* Bottom Left - Stats Section */}
-            <div>
+          {/* Bottom Left - Stats Section */}
+          <div>
+            {habits.length > 0 ? (
               <StatsSection
                 completed={stats.completed}
                 total={stats.total}
                 rate={stats.rate}
               />
-            </div>
-
-            {/* Bottom Right - Daily Reflection */}
-            <div>
-              <DailyReflection date={selectedDate || undefined} />
-            </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-2xl mb-2">📊</div>
+                <p className="text-gray-500 text-sm">
+                  Stats will appear here when you have habits to track
+                </p>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Bottom Right - Daily Reflection */}
+          <div>
+            <DailyReflection date={selectedDate || undefined} />
+          </div>
+        </div>
       </main>
 
       {/* Confirmation Modal */}

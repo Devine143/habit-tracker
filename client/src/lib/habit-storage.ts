@@ -218,9 +218,8 @@ export class HabitStorage {
   // Initialize with test data for demonstration
   static initializeTestData(): void {
     const existingNotes = this.getDailyNotes();
-    const existingCompletions = this.getHabitCompletions();
     
-    // Only add test data if none exists
+    // Only add test reflection data if none exists
     if (existingNotes.length === 0) {
       const today = new Date();
       const testNotes: DailyNote[] = [];
@@ -242,10 +241,15 @@ export class HabitStorage {
       
       this.saveDailyNotes(testNotes);
     }
+  }
+
+  // Initialize test completion data only when habits exist
+  static initializeTestCompletions(): void {
+    const existingCompletions = this.getHabitCompletions();
+    const habits = this.getHabits();
     
-    // Add some test completion data if none exists
-    if (existingCompletions.length === 0 && this.getHabits().length > 0) {
-      const habits = this.getHabits();
+    // Add some test completion data if none exists and we have habits
+    if (existingCompletions.length === 0 && habits.length > 0) {
       const testCompletions: HabitCompletion[] = [];
       const today = new Date();
       

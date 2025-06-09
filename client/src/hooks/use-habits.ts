@@ -17,6 +17,9 @@ export function useHabits() {
   const addHabit = (habitData: InsertHabit) => {
     const newHabit = HabitStorage.addHabit(habitData);
     setHabits(prev => [...prev, newHabit]);
+    
+    // Initialize test completion data when first habit is added
+    HabitStorage.initializeTestCompletions();
   };
 
   const toggleHabit = (habitId: number) => {
