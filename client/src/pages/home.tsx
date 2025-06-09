@@ -93,7 +93,7 @@ export default function Home() {
 
             {/* Top Right - Calendar */}
             <div>
-              <HabitCalendar />
+              <HabitCalendar onDateSelect={handleDateSelect} />
             </div>
 
             {/* Bottom Left - Stats Section */}
@@ -107,7 +107,7 @@ export default function Home() {
 
             {/* Bottom Right - Daily Reflection */}
             <div>
-              <DailyReflection />
+              <DailyReflection date={selectedDate || undefined} />
             </div>
           </div>
         )}

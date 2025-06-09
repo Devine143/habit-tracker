@@ -165,22 +165,28 @@ export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarPro
         </div>
         
         {/* Legend */}
-        <div className="mt-3 flex items-center justify-center gap-3 text-[10px]">
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded bg-red-100"></div>
-            <span className="text-gray-500">0%</span>
+        <div className="mt-3 space-y-1">
+          <div className="flex items-center justify-center gap-3 text-[10px]">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded bg-red-100"></div>
+              <span className="text-gray-500">0%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded bg-orange-100"></div>
+              <span className="text-gray-500">&lt;50%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded bg-yellow-100"></div>
+              <span className="text-gray-500">&lt;80%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded bg-green-100"></div>
+              <span className="text-gray-500">80%+</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded bg-orange-100"></div>
-            <span className="text-gray-500">&lt;50%</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded bg-yellow-100"></div>
-            <span className="text-gray-500">&lt;80%</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded bg-green-100"></div>
-            <span className="text-gray-500">80%+</span>
+          <div className="flex items-center justify-center gap-1 text-[9px]">
+            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+            <span className="text-gray-400">has reflection</span>
           </div>
         </div>
       </CardContent>
