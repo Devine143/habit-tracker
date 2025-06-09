@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { HabitStorage } from '@/lib/habit-storage';
+import { DailyQuote } from '@/components/daily-quote';
 
 interface HabitCalendarProps {
   className?: string;
@@ -195,6 +196,11 @@ export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0
             <div className="w-2 h-2 rounded-full bg-blue-500"></div>
             <span className="text-gray-400">has reflection</span>
           </div>
+        </div>
+        
+        {/* Daily Quote */}
+        <div className="mt-3">
+          <DailyQuote date={new Date()} />
         </div>
       </CardContent>
     </Card>
