@@ -33,6 +33,10 @@ export default function Home() {
     setHabitToDelete(null);
   };
 
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
