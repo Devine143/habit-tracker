@@ -20,9 +20,9 @@ export function StreakBadge({ streak, className = '' }: StreakBadgeProps) {
   return (
     <Badge 
       variant="outline" 
-      className={`${getStreakColor(streak)} flex items-center gap-1 text-xs font-medium ${className}`}
+      className={`${getStreakColor(streak)} flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 h-4 ${className}`}
     >
-      <Flame className="w-3 h-3" />
+      <Flame className="w-2.5 h-2.5" />
       {streak}
     </Badge>
   );
