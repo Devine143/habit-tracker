@@ -1,40 +1,129 @@
 import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Plus, Target, Zap, Calendar, Trophy } from 'lucide-react';
 
 interface AddHabitFormProps {
   onAddHabit: (name: string) => void;
 }
 
+const popularHabits = [
+  'Drink 8 glasses of water',
+  'Exercise for 30 minutes',
+  'Read for 20 minutes',
+  'Meditate',
+  'Write in journal',
+  'Take vitamins'
+];
+
+const motivationalTips = [
+  "Start small and build momentum",
+  "Consistency beats perfection",
+  "Track your progress daily",
+  "Celebrate small wins"
+];
+
 export function AddHabitForm({ onAddHabit }: AddHabitFormProps) {
   const [habitName, setHabitName] = useState('');
+  const [currentTip, setCurrentTip] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (habitName.trim()) {
       onAddHabit(habitName.trim());
       setHabitName('');
+      // Cycle through tips when adding a habit
+      setCurrentTip((prev) => (prev + 1) % motivationalTips.length);
     }
   };
 
+  const handleQuickAdd = (habit: string) => {
+    onAddHabit(habit);
+    setCurrentTip((prev) => (prev + 1) % motivationalTips.length);
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mt-6 mb-6">
-      <form onSubmit={handleSubmit} className="flex gap-3">
-        <Input
-          type="text"
-          value={habitName}
-          onChange={(e) => setHabitName(e.target.value)}
-          placeholder="Add a new habit..."
-          className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-        />
-        <Button
-          type="submit"
-          className="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 min-w-[80px]"
-        >
-          <Plus className="w-4 h-4" />
-        </Button>
-      </form>
-    </div>
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-3 flex-shrink-0">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Target className="w-4 h-4 text-green-600" />
+          <span className="text-sm font-semibold">Add New Habit</span>
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="pt-0 flex-1 flex flex-col min-h-0 space-y-4">
+        {/* Add Habit Form */}
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Input
+            type="text"
+            value={habitName}
+            onChange={(e) => setHabitName(e.target.value)}
+            placeholder="Enter your new habit..."
+            className="flex-1 text-sm"
+          />
+          <Button
+            type="submit"
+            size="sm"
+            className="px-3"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </form>
+
+        {/* Popular Habits */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Zap className="w-3 h-3 text-orange-500" />
+            <span className="text-xs font-medium text-gray-700">Quick Add</span>
+          </div>
+          <div className="grid grid-cols-1 gap-1">
+            {popularHabits.slice(0, 3).map((habit, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="sm"
+                onClick={() => handleQuickAdd(habit)}
+                className="justify-start text-xs h-7 px-2"
+              >
+                <Plus className="w-3 h-3 mr-1" />
+                {habit}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 rounded-lg border-l-4 border-green-500">
+          <div className="flex items-center gap-2 mb-2">
+            <Trophy className="w-4 h-4 text-green-600" />
+            <span className="text-sm font-medium text-green-800">Daily Motivation</span>
+          </div>
+          <p className="text-xs text-green-700 italic">
+            {motivationalTips[currentTip]}
+          </p>
+        </div>
+
+        {/* Tips */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-3 h-3 text-blue-500" />
+            <span className="text-xs font-medium text-gray-700">Pro Tips</span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            <Badge variant="secondary" className="text-xs">
+              Start small
+            </Badge>
+            <Badge variant="secondary" className="text-xs">
+              Be specific
+            </Badge>
+            <Badge variant="secondary" className="text-xs">
+              Set reminders
+            </Badge>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
