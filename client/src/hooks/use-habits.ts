@@ -25,6 +25,13 @@ export function useHabits() {
       completed: !habit.completed,
     };
 
+    // Record the completion in our historical tracking
+    HabitStorage.recordHabitCompletion({
+      habitId,
+      date: today,
+      completed: !habit.completed
+    });
+
     if (!habit.completed) {
       // Completing the habit
       updates.streak = habit.streak + 1;

@@ -1,9 +1,10 @@
-import { Habit, InsertHabit, DailyNote, InsertDailyNote } from "@shared/schema";
+import { Habit, InsertHabit, DailyNote, InsertDailyNote, HabitCompletion, InsertHabitCompletion } from "@shared/schema";
 
 export class HabitStorage {
   private static HABITS_KEY = 'habits';
   private static CURRENT_DATE_KEY = 'currentDate';
   private static DAILY_NOTES_KEY = 'dailyNotes';
+  private static HABIT_COMPLETIONS_KEY = 'habitCompletions';
 
   static getHabits(): Habit[] {
     const stored = localStorage.getItem(this.HABITS_KEY);
@@ -132,5 +133,85 @@ export class HabitStorage {
     const notes = this.getDailyNotes();
     const filtered = notes.filter(note => note.date !== date);
     this.saveDailyNotes(filtered);
+  }
+
+  // Habit Completion methods
+  static getHabitCompletions(): HabitCompletion[] {
+    const stored = localStorage.getItem(this.HABIT_COMPLETIONS_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  static saveHabitCompletions(completions: HabitCompletion[]): void {
+    localStorage.setItem(this.HABIT_COMPLETIONS_KEY, JSON.stringify(completions));
+  }
+
+  static getHabitCompletionForDate(habitId: number, date: string): HabitCompletion | undefined {
+    const completions = this.getHabitCompletions();
+    return completions.find(c => c.habitId === habitId && c.date === date);
+  }
+
+  static recordHabitCompletion(completionData: InsertHabitCompletion): HabitCompletion {
+    const completions = this.getHabitCompletions();
+    const existing = completions.find(c => 
+      c.habitId === completionData.habitId && c.date === completionData.date
+    );
+
+    if (existing) {
+      // Update existing completion
+      existing.completed = completionData.completed;
+      existing.completedAt = new Date().toISOString();
+      this.saveHabitCompletions(completions);
+      return existing;
+    } else {
+      // Create new completion record
+      const newCompletion: HabitCompletion = {
+        id: Date.now(),
+        completedAt: new Date().toISOString(),
+        ...completionData,
+      };
+      completions.push(newCompletion);
+      this.saveHabitCompletions(completions);
+      return newCompletion;
+    }
+  }
+
+  static getCompletionStatsForDate(date: string): { completed: number; total: number } {
+    const habits = this.getHabits();
+    const completions = this.getHabitCompletions();
+    
+    const completedCount = completions.filter(c => 
+      c.date === date && c.completed
+    ).length;
+    
+    return {
+      completed: completedCount,
+      total: habits.length
+    };
+  }
+
+  static getCompletionRateForDateRange(startDate: Date, endDate: Date): Array<{
+    date: string;
+    completed: number;
+    total: number;
+    rate: number;
+  }> {
+    const results = [];
+    const currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+      const dateStr = currentDate.toDateString();
+      const stats = this.getCompletionStatsForDate(dateStr);
+      
+      results.push({
+        date: dateStr,
+        completed: stats.completed,
+        total: stats.total,
+        rate: stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0
+      });
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return results;
   }
 }

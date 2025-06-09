@@ -30,7 +30,22 @@ export const insertDailyNoteSchema = dailyNoteSchema.omit({
   updatedAt: true,
 });
 
+export const habitCompletionSchema = z.object({
+  id: z.number(),
+  habitId: z.number(),
+  date: z.string(),
+  completed: z.boolean(),
+  completedAt: z.string(),
+});
+
+export const insertHabitCompletionSchema = habitCompletionSchema.omit({
+  id: true,
+  completedAt: true,
+});
+
 export type Habit = z.infer<typeof habitSchema>;
 export type InsertHabit = z.infer<typeof insertHabitSchema>;
 export type DailyNote = z.infer<typeof dailyNoteSchema>;
 export type InsertDailyNote = z.infer<typeof insertDailyNoteSchema>;
+export type HabitCompletion = z.infer<typeof habitCompletionSchema>;
+export type InsertHabitCompletion = z.infer<typeof insertHabitCompletionSchema>;
