@@ -13,11 +13,13 @@ export function useDatabaseNotes() {
   // Save daily note mutation
   const saveNoteMutation = useMutation({
     mutationFn: async (noteData: Omit<InsertDailyNote, 'userId'>) => {
-      return await apiRequest('/api/daily-notes', {
+      const response = await fetch('/api/daily-notes', {
         method: 'POST',
         body: JSON.stringify(noteData),
         headers: { 'Content-Type': 'application/json' },
       });
+      if (!response.ok) throw new Error('Failed to save note');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/daily-notes'] });

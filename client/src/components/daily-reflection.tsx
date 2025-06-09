@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Save, Edit3, Calendar } from 'lucide-react';
-import { useDailyNotes } from '@/hooks/use-daily-notes';
+import { useDatabaseNotes } from '@/hooks/use-database-notes';
 import { useToast } from '@/hooks/use-toast';
 
 interface DailyReflectionProps {
@@ -18,18 +18,18 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
   const [noteText, setNoteText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   
-  const { getNoteForDate, saveNote } = useDailyNotes();
+  const { notes, saveNote, isLoading } = useDatabaseNotes();
   const { toast } = useToast();
   
-  const targetDate = date || new Date().toDateString();
-  const isToday = targetDate === new Date().toDateString();
+  const targetDate = date || new Date().toISOString().split('T')[0]; // Use YYYY-MM-DD format
+  const isToday = targetDate === new Date().toISOString().split('T')[0];
 
   useEffect(() => {
-    const existingNote = getNoteForDate(targetDate);
+    const existingNote = notes.find(note => note.date === targetDate);
     const newNoteText = existingNote ? existingNote.note : '';
     setNoteText(newNoteText);
     setIsEditing(false);
-  }, [targetDate, getNoteForDate]);
+  }, [targetDate, notes]);
 
   const handleSave = useCallback(async () => {
     if (noteText.trim() === '') {
@@ -66,10 +66,10 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
   }, [noteText, targetDate, saveNote, onReflectionChange, toast]);
 
   const handleCancel = useCallback(() => {
-    const existingNote = getNoteForDate(targetDate);
+    const existingNote = notes.find(note => note.date === targetDate);
     setNoteText(existingNote?.note || '');
     setIsEditing(false);
-  }, [getNoteForDate, targetDate]);
+  }, [notes, targetDate]);
 
   const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
