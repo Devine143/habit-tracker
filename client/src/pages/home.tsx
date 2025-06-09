@@ -53,8 +53,12 @@ export default function Home() {
 
   const handleHabitToggle = (habitId: number) => {
     const today = new Date().toISOString().split('T')[0];
-    const isCompleted = habits.find(h => h.id === habitId)?.completed || false;
-    toggleHabit(habitId, !isCompleted, today);
+    // Check if this habit is completed today by looking at completions data
+    const todayCompletion = completions.find(c => 
+      c.habitId === habitId && c.date === today
+    );
+    const isCurrentlyCompleted = todayCompletion?.completed || false;
+    toggleHabit(habitId, !isCurrentlyCompleted, today);
     // Update calendar when habit is toggled to keep percentages in sync
     setCalendarRefresh(prev => prev + 1);
   };
