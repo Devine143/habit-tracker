@@ -1,8 +1,9 @@
-import { Habit, InsertHabit } from "@shared/schema";
+import { Habit, InsertHabit, DailyNote, InsertDailyNote } from "@shared/schema";
 
 export class HabitStorage {
   private static HABITS_KEY = 'habits';
   private static CURRENT_DATE_KEY = 'currentDate';
+  private static DAILY_NOTES_KEY = 'dailyNotes';
 
   static getHabits(): Habit[] {
     const stored = localStorage.getItem(this.HABITS_KEY);
@@ -80,5 +81,56 @@ export class HabitStorage {
     }
 
     return habits;
+  }
+
+  // Daily Notes methods
+  static getDailyNotes(): DailyNote[] {
+    const stored = localStorage.getItem(this.DAILY_NOTES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  static saveDailyNotes(notes: DailyNote[]): void {
+    localStorage.setItem(this.DAILY_NOTES_KEY, JSON.stringify(notes));
+  }
+
+  static getDailyNote(date: string): DailyNote | undefined {
+    const notes = this.getDailyNotes();
+    return notes.find(note => note.date === date);
+  }
+
+  static saveDailyNote(noteData: InsertDailyNote): DailyNote {
+    const notes = this.getDailyNotes();
+    const existingIndex = notes.findIndex(note => note.date === noteData.date);
+    const now = new Date().toISOString();
+
+    if (existingIndex !== -1) {
+      // Update existing note
+      const updatedNote: DailyNote = {
+        ...notes[existingIndex],
+        note: noteData.note,
+        updatedAt: now,
+      };
+      notes[existingIndex] = updatedNote;
+      this.saveDailyNotes(notes);
+      return updatedNote;
+    } else {
+      // Create new note
+      const newNote: DailyNote = {
+        id: Date.now(),
+        date: noteData.date,
+        note: noteData.note,
+        createdAt: now,
+        updatedAt: now,
+      };
+      notes.push(newNote);
+      this.saveDailyNotes(notes);
+      return newNote;
+    }
+  }
+
+  static deleteDailyNote(date: string): void {
+    const notes = this.getDailyNotes();
+    const filtered = notes.filter(note => note.date !== date);
+    this.saveDailyNotes(filtered);
   }
 }

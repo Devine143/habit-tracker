@@ -5,6 +5,7 @@ import { AddHabitForm } from '@/components/add-habit-form';
 import { HabitCard } from '@/components/habit-card';
 import { StatsSection } from '@/components/stats-section';
 import { ConfirmationModal } from '@/components/confirmation-modal';
+import { DailyReflection } from '@/components/daily-reflection';
 
 export default function Home() {
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
@@ -82,6 +83,11 @@ export default function Home() {
             rate={stats.rate}
           />
         )}
+
+        {/* Daily Reflection */}
+        <div className="mt-6">
+          <DailyReflection />
+        </div>
       </main>
 
       {/* Confirmation Modal */}
