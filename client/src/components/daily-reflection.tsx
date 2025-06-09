@@ -26,8 +26,10 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
     const existingNote = getNoteForDate(targetDate);
     if (existingNote) {
       setNoteText(existingNote.note);
+      setIsEditing(false);
     } else {
       setNoteText('');
+      setIsEditing(false);
     }
   }, [targetDate, getNoteForDate]);
 
@@ -112,7 +114,10 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
               {isToday ? "How did your day go?" : "No reflection for this day"}
             </p>
             <Button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                console.log('Setting editing to true');
+                setIsEditing(true);
+              }}
               variant="outline"
               size="sm"
               className="gap-2"
@@ -148,16 +153,20 @@ export function DailyReflection({ date, className = '' }: DailyReflectionProps) 
               <label className="text-sm font-medium text-gray-700">
                 {isToday ? "How was your day? What did you learn?" : "Add your thoughts about this day"}
               </label>
-              <Textarea
+              <textarea
                 value={noteText}
-                onChange={(e) => setNoteText(e.target.value)}
+                onChange={(e) => {
+                  console.log('Textarea change:', e.target.value);
+                  setNoteText(e.target.value);
+                }}
                 placeholder={
                   isToday 
                     ? "Share your thoughts, challenges, wins, or anything that stood out today..."
                     : "Add your reflection or notes for this day..."
                 }
-                className="min-h-[120px] resize-none"
+                className="w-full min-h-[120px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-sm"
                 maxLength={1000}
+                autoFocus
               />
               <div className="text-xs text-gray-500 text-right">
                 {noteText.length}/1000 characters
