@@ -21,26 +21,13 @@ export interface ReflectionSummary {
 export class AIService {
   static async analyzeProgress(period: number = 7): Promise<ProgressAnalysis> {
     try {
-      // Gather habit data
-      const habits = HabitStorage.getHabits();
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(endDate.getDate() - (period - 1));
-      
-      const completionData = HabitStorage.getCompletionRateForDateRange(startDate, endDate);
-      const reflections = HabitStorage.getDailyNotes().filter(note => {
-        const noteDate = new Date(note.date);
-        return noteDate >= startDate && noteDate <= endDate;
+      const response = await fetch('/api/ai/analyze-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ period })
       });
 
-      const requestData = {
-        habits,
-        completionData,
-        reflections,
-        period
-      };
-
-      const response = await apiRequest('POST', '/api/ai/analyze-progress', requestData);
+      if (!response.ok) throw new Error('Failed to analyze progress');
       return await response.json() as ProgressAnalysis;
     } catch (error) {
       console.error('Error analyzing progress:', error);
@@ -50,22 +37,16 @@ export class AIService {
 
   static async summarizeReflections(startDate: Date, endDate: Date): Promise<ReflectionSummary> {
     try {
-      const reflections = HabitStorage.getDailyNotes().filter(note => {
-        const noteDate = new Date(note.date);
-        return noteDate >= startDate && noteDate <= endDate;
+      const response = await fetch('/api/ai/summarize-reflections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString()
+        })
       });
 
-      if (reflections.length === 0) {
-        throw new Error('No reflections found for the selected period.');
-      }
-
-      const requestData = {
-        reflections,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
-      };
-
-      const response = await apiRequest('POST', '/api/ai/summarize-reflections', requestData);
+      if (!response.ok) throw new Error('Failed to summarize reflections');
       return await response.json() as ReflectionSummary;
     } catch (error) {
       console.error('Error summarizing reflections:', error);
@@ -75,27 +56,17 @@ export class AIService {
 
   static async askQuestion(question: string, context?: string): Promise<string> {
     try {
-      // Gather current context
-      const habits = HabitStorage.getHabits();
-      const recentReflections = HabitStorage.getDailyNotes().slice(-7); // Last 7 reflections
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(endDate.getDate() - 6); // Last 7 days
-      const recentData = HabitStorage.getCompletionRateForDateRange(startDate, endDate);
+      const response = await fetch('/api/ai/ask-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, context })
+      });
 
-      const requestData = {
-        question,
-        context,
-        habits,
-        recentReflections,
-        recentData
-      };
-
-      const response = await apiRequest('POST', '/api/ai/ask-question', requestData);
-      const data = await response.json();
-      return data.answer || 'Sorry, I could not process your question.';
+      if (!response.ok) throw new Error('Failed to process question');
+      const result = await response.json();
+      return result.answer || 'Sorry, I could not process your question.';
     } catch (error) {
-      console.error('Error processing question:', error);
+      console.error('Error asking question:', error);
       throw new Error('Failed to process your question. Please try again.');
     }
   }

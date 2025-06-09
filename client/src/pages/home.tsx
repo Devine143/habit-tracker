@@ -14,7 +14,7 @@ import { AIAssistantWidget } from '@/components/ai-assistant-widget';
 
 export default function Home() {
   const { user } = useAuth();
-  const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
+  const { habits, addHabit, toggleHabit, deleteHabit, rate } = useDatabaseHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarRefresh, setCalendarRefresh] = useState(0);
