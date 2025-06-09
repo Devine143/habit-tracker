@@ -107,7 +107,7 @@ export function useDatabaseHabits() {
   // Calculate completion rate
   const getCompletionRate = () => {
     if (habits.length === 0) return 0;
-    const today = new Date().toDateString();
+    const today = new Date().toISOString().split('T')[0];
     const todayCompletions = completions.filter(c => c.date === today && c.completed);
     return Math.round((todayCompletions.length / habits.length) * 100);
   };
