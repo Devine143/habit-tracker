@@ -14,7 +14,7 @@ import { AIAssistantWidget } from '@/components/ai-assistant-widget';
 
 export default function Home() {
   const { user } = useAuth();
-  const { habits, addHabit, toggleHabit, deleteHabit, rate } = useDatabaseHabits();
+  const { habits, addHabit, toggleHabit, deleteHabit, rate, getCompletionStatsForDate } = useDatabaseHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarRefresh, setCalendarRefresh] = useState(0);
@@ -52,9 +52,20 @@ export default function Home() {
   };
 
   const handleHabitToggle = (habitId: number) => {
-    toggleHabit(habitId);
+    const today = new Date().toISOString().split('T')[0];
+    const isCompleted = habits.find(h => h.id === habitId)?.completed || false;
+    toggleHabit(habitId, !isCompleted, today);
     // Update calendar when habit is toggled to keep percentages in sync
     setCalendarRefresh(prev => prev + 1);
+  };
+
+  // Calculate today's stats
+  const today = new Date().toISOString().split('T')[0];
+  const todayStats = getCompletionStatsForDate(today);
+  const stats = {
+    completed: todayStats.completed,
+    total: todayStats.total,
+    rate: rate
   };
 
   return (
@@ -76,11 +87,9 @@ export default function Home() {
             {user && (
               <div className="text-right">
                 <p className="text-sm font-medium">
-                  {user.firstName || user.email || 'User'}
+                  {(user as any)?.firstName || (user as any)?.email || 'User'}
                 </p>
-                <p className="text-xs text-purple-200">
-                  Welcome back!
-                </p>
+                <p className="text-xs text-purple-200">Welcome back!</p>
               </div>
             )}
             <Button
