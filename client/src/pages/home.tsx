@@ -149,9 +149,9 @@ export default function Home() {
         {/* Desktop Layout - Three Column Layout for large screens */}
         <div className="hidden lg:grid lg:grid-cols-3 gap-6 mt-6 h-[600px] overflow-hidden">
           {/* Left Column - Habits (top half) and Progress Stats (bottom half) */}
-          <div className="flex flex-col h-full gap-6">
+          <div className="flex flex-col h-full">
             {/* Habits Section - Top Half */}
-            <div className="flex-1 min-h-0 max-h-[280px]">
+            <div className="h-[287px] mb-6">
               <div className="bg-white rounded-lg border h-full flex flex-col">
                 <div className="p-4 border-b flex-shrink-0">
                   <h3 className="text-sm font-semibold text-gray-700">Your Habits</h3>
@@ -182,7 +182,7 @@ export default function Home() {
             </div>
 
             {/* Progress Stats Section - Bottom Half */}
-            <div className="flex-1 min-h-0 max-h-[280px]">
+            <div className="h-[287px]">
               {habits.length > 0 ? (
                 <StatsSection
                   completed={stats.completed}
@@ -210,9 +210,9 @@ export default function Home() {
           </div>
 
           {/* Right Column - Progress Chart (top half) and Daily Reflection (bottom half) */}
-          <div className="flex flex-col h-full gap-6">
+          <div className="flex flex-col h-full">
             {/* Progress Chart - Top Half */}
-            <div className="flex-1 min-h-0 max-h-[280px]">
+            <div className="h-[287px] mb-6">
               <ProgressChart 
                 className="h-full"
                 refreshTrigger={calendarRefresh} 
@@ -220,7 +220,7 @@ export default function Home() {
             </div>
             
             {/* Daily Reflection - Bottom Half */}
-            <div className="flex-1 min-h-0 max-h-[280px]">
+            <div className="h-[287px]">
               <DailyReflection 
                 className="h-full"
                 date={selectedDate || undefined} 
