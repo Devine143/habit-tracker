@@ -64,24 +64,35 @@ export default function Home() {
           </div>
         )}
 
-        {/* Main Content Grid */}
-        {habits.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-            {/* Left Column - Habits List */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Habits List */}
-              <div className="space-y-3">
-                {habits.map(habit => (
-                  <HabitCard
-                    key={habit.id}
-                    habit={habit}
-                    onToggle={toggleHabit}
-                    onDelete={handleDeleteHabit}
-                  />
-                ))}
-              </div>
+        {/* Daily Reflection - Show when no habits */}
+        {habits.length === 0 && (
+          <div className="mt-6 max-w-2xl mx-auto">
+            <DailyReflection />
+          </div>
+        )}
 
-              {/* Stats Section */}
+        {/* Main Content - 2x2 Grid */}
+        {habits.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Top Left - Habits List */}
+            <div className="space-y-3">
+              {habits.map(habit => (
+                <HabitCard
+                  key={habit.id}
+                  habit={habit}
+                  onToggle={toggleHabit}
+                  onDelete={handleDeleteHabit}
+                />
+              ))}
+            </div>
+
+            {/* Top Right - Calendar */}
+            <div>
+              <HabitCalendar />
+            </div>
+
+            {/* Bottom Left - Stats Section */}
+            <div>
               <StatsSection
                 completed={stats.completed}
                 total={stats.total}
@@ -89,17 +100,12 @@ export default function Home() {
               />
             </div>
 
-            {/* Right Column - Calendar */}
-            <div className="lg:col-span-1">
-              <HabitCalendar className="h-fit" />
+            {/* Bottom Right - Daily Reflection */}
+            <div>
+              <DailyReflection />
             </div>
           </div>
         )}
-
-        {/* Daily Reflection - Full Width */}
-        <div className="mt-6 max-w-2xl mx-auto">
-          <DailyReflection />
-        </div>
       </main>
 
       {/* Confirmation Modal */}
