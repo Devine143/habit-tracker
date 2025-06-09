@@ -10,9 +10,10 @@ import { useToast } from '@/hooks/use-toast';
 interface DailyReflectionProps {
   date?: string;
   className?: string;
+  onReflectionChange?: () => void;
 }
 
-export function DailyReflection({ date, className = '' }: DailyReflectionProps) {
+export function DailyReflection({ date, className = '', onReflectionChange }: DailyReflectionProps) {
   const targetDate = date || new Date().toDateString();
   const isToday = targetDate === new Date().toDateString();
   const { getNoteForDate, saveNote } = useDailyNotes();

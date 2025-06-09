@@ -7,9 +7,10 @@ import { HabitStorage } from '@/lib/habit-storage';
 interface HabitCalendarProps {
   className?: string;
   onDateSelect?: (date: string) => void;
+  refreshTrigger?: number;
 }
 
-export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarProps) {
+export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0 }: HabitCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const calendarData = useMemo(() => {
@@ -22,6 +23,9 @@ export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarPro
     
     // Get completion data for the month
     const monthData = HabitStorage.getCompletionRateForDateRange(firstDay, lastDay);
+    
+    // Get all daily notes to check for reflections (this makes the component reactive)
+    const allNotes = HabitStorage.getDailyNotes();
     
     // Get first day of week (Sunday = 0, Monday = 1, etc.)
     const firstDayOfWeek = firstDay.getDay();
@@ -39,7 +43,7 @@ export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarPro
       const date = new Date(year, month, day);
       const dateStr = date.toDateString();
       const dayData = monthData.find(d => d.date === dateStr);
-      const hasReflection = HabitStorage.getDailyNote(dateStr) !== undefined;
+      const hasReflection = allNotes.some(note => note.date === dateStr);
       
       days.push({
         date,
@@ -54,7 +58,7 @@ export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarPro
     }
     
     return days;
-  }, [currentMonth]);
+  }, [currentMonth, refreshTrigger]);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentMonth(prev => {

@@ -12,6 +12,7 @@ export default function Home() {
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [calendarRefresh, setCalendarRefresh] = useState(0);
 
   const handleAddHabit = (name: string) => {
     const today = new Date().toDateString();
@@ -35,6 +36,10 @@ export default function Home() {
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
+  };
+
+  const handleReflectionChange = () => {
+    setCalendarRefresh(prev => prev + 1);
   };
 
   return (
@@ -84,7 +89,10 @@ export default function Home() {
 
           {/* Top Right - Calendar */}
           <div>
-            <HabitCalendar onDateSelect={handleDateSelect} />
+            <HabitCalendar 
+              onDateSelect={handleDateSelect} 
+              refreshTrigger={calendarRefresh}
+            />
           </div>
 
           {/* Bottom Left - Stats Section */}
@@ -107,7 +115,10 @@ export default function Home() {
 
           {/* Bottom Right - Daily Reflection */}
           <div>
-            <DailyReflection date={selectedDate || undefined} />
+            <DailyReflection 
+              date={selectedDate || undefined} 
+              onReflectionChange={handleReflectionChange}
+            />
           </div>
         </div>
       </main>
