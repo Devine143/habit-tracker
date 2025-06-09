@@ -24,8 +24,11 @@ export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0
     // Get completion data for the month
     const monthData = HabitStorage.getCompletionRateForDateRange(firstDay, lastDay);
     
-    // Get all daily notes to check for reflections (this makes the component reactive)
+    // Get all daily notes to check for reflections
     const allNotes = HabitStorage.getDailyNotes();
+    
+    // Get current habits to ensure reactivity
+    const currentHabits = HabitStorage.getHabits();
     
     // Get first day of week (Sunday = 0, Monday = 1, etc.)
     const firstDayOfWeek = firstDay.getDay();

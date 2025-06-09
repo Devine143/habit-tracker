@@ -6,9 +6,6 @@ export function useHabits() {
   const [habits, setHabits] = useState<Habit[]>([]);
 
   useEffect(() => {
-    // Clear test data that's causing percentage calculation issues
-    HabitStorage.clearAllData();
-    
     // Check for new day and load habits
     const loadedHabits = HabitStorage.checkAndResetForNewDay();
     setHabits(loadedHabits);

@@ -177,9 +177,19 @@ export class HabitStorage {
 
   static getCompletionStatsForDate(date: string): { completed: number; total: number } {
     const habits = this.getHabits();
-    const completions = this.getHabitCompletions();
+    const today = new Date().toDateString();
     
-    // Only count unique habit completions for the date
+    // For today, use current habit states
+    if (date === today) {
+      const completed = habits.filter(h => h.completed).length;
+      return {
+        completed,
+        total: habits.length
+      };
+    }
+    
+    // For other dates, use historical completion records
+    const completions = this.getHabitCompletions();
     const habitIds = new Set();
     const completedCount = completions.filter(c => {
       if (c.date === date && c.completed && !habitIds.has(c.habitId)) {

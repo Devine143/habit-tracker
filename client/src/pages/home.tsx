@@ -42,6 +42,12 @@ export default function Home() {
     setCalendarRefresh(prev => prev + 1);
   };
 
+  const handleHabitToggle = (habitId: number) => {
+    toggleHabit(habitId);
+    // Update calendar when habit is toggled to keep percentages in sync
+    setCalendarRefresh(prev => prev + 1);
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -80,7 +86,7 @@ export default function Home() {
                 <HabitCard
                   key={habit.id}
                   habit={habit}
-                  onToggle={toggleHabit}
+                  onToggle={handleHabitToggle}
                   onDelete={handleDeleteHabit}
                 />
               ))
