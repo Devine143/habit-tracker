@@ -40,15 +40,15 @@ export function StatsSection({ completed, total, rate }: StatsSectionProps) {
   };
 
   return (
-    <Card className="w-full h-fit">
-      <CardHeader className="pb-3">
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="flex items-center gap-2 text-base">
           <BarChart3 className="w-4 h-4 text-blue-600" />
           <span className="text-sm font-semibold">Progress Stats</span>
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
         <div className="space-y-4">
           {/* Today's Progress Bar */}
           <div className="space-y-2">

@@ -91,8 +91,8 @@ export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <Card className={`w-full h-fit ${className}`}>
-      <CardHeader className="pb-3">
+    <Card className={`w-full flex flex-col ${className}`}>
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-purple-600" />
@@ -122,7 +122,7 @@ export function HabitCalendar({ className = '', onDateSelect, refreshTrigger = 0
         </div>
       </CardHeader>
       
-      <CardContent className="pt-3">
+      <CardContent className="pt-3 flex-1 flex flex-col min-h-0">
         {/* Day headers */}
         <div className="grid grid-cols-7 gap-0.5 mb-1">
           {dayNames.map(day => (

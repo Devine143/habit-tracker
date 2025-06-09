@@ -83,8 +83,8 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
   const hasNote = noteText.trim() !== '';
 
   return (
-    <Card className={`w-full h-fit ${className}`}>
-      <CardHeader className="pb-3">
+    <Card className={`w-full flex flex-col ${className}`}>
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-purple-600" />
@@ -104,7 +104,7 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
         )}
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
         {!isEditing && !hasNote && (
           <div className="text-center py-6">
             <div className="text-4xl mb-3">💭</div>

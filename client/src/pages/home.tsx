@@ -70,61 +70,87 @@ export default function Home() {
           <AddHabitForm onAddHabit={handleAddHabit} />
         </div>
 
-        {/* Main Content - Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-start">
-          {/* Left Column - Habits List */}
-          <div className="space-y-3 min-h-[400px]">
-            {habits.length === 0 ? (
-              <div className="bg-white rounded-lg border p-8 text-center h-full flex flex-col justify-center">
-                <div className="text-4xl mb-4">🎯</div>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">No habits yet</h3>
-                <p className="text-gray-500 text-sm">
-                  Your habits will appear here once you add them!
-                </p>
+        {/* Main Content - Three Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 h-[600px]">
+          {/* Left Column - Habits (top half) and Progress Stats (bottom half) */}
+          <div className="flex flex-col h-full gap-6">
+            {/* Habits Section - Top Half */}
+            <div className="flex-1 min-h-0">
+              <div className="bg-white rounded-lg border h-full flex flex-col">
+                <div className="p-4 border-b">
+                  <h3 className="text-sm font-semibold text-gray-700">Your Habits</h3>
+                </div>
+                <div className="flex-1 overflow-y-auto p-3">
+                  {habits.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-4xl mb-4">🎯</div>
+                      <h3 className="text-lg font-semibold text-gray-700 mb-2">No habits yet</h3>
+                      <p className="text-gray-500 text-sm">
+                        Your habits will appear here once you add them!
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {habits.map(habit => (
+                        <HabitCard
+                          key={habit.id}
+                          habit={habit}
+                          onToggle={handleHabitToggle}
+                          onDelete={handleDeleteHabit}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            ) : (
-              habits.map(habit => (
-                <HabitCard
-                  key={habit.id}
-                  habit={habit}
-                  onToggle={handleHabitToggle}
-                  onDelete={handleDeleteHabit}
+            </div>
+
+            {/* Progress Stats Section - Bottom Half */}
+            <div className="flex-1 min-h-0">
+              {habits.length > 0 ? (
+                <StatsSection
+                  completed={stats.completed}
+                  total={stats.total}
+                  rate={stats.rate}
                 />
-              ))
-            )}
+              ) : (
+                <div className="bg-white rounded-lg border p-8 text-center h-full flex flex-col justify-center">
+                  <div className="text-2xl mb-2">📊</div>
+                  <p className="text-gray-500 text-sm">
+                    Stats will appear here when you have habits to track
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Middle Column - Calendar and Stats */}
-          <div className="space-y-6">
+          {/* Middle Column - Calendar (Full Height) */}
+          <div className="h-full">
             <HabitCalendar 
+              className="h-full"
               onDateSelect={handleDateSelect} 
               refreshTrigger={calendarRefresh}
             />
-            
-            {habits.length > 0 ? (
-              <StatsSection
-                completed={stats.completed}
-                total={stats.total}
-                rate={stats.rate}
-              />
-            ) : (
-              <div className="bg-white rounded-lg border p-8 text-center">
-                <div className="text-2xl mb-2">📊</div>
-                <p className="text-gray-500 text-sm">
-                  Stats will appear here when you have habits to track
-                </p>
-              </div>
-            )}
           </div>
 
-          {/* Right Column - Progress Chart and Daily Reflection */}
-          <div className="space-y-6">
-            <ProgressChart refreshTrigger={calendarRefresh} />
+          {/* Right Column - Progress Chart (top half) and Daily Reflection (bottom half) */}
+          <div className="flex flex-col h-full gap-6">
+            {/* Progress Chart - Top Half */}
+            <div className="flex-1 min-h-0">
+              <ProgressChart 
+                className="h-full"
+                refreshTrigger={calendarRefresh} 
+              />
+            </div>
             
-            <DailyReflection 
-              date={selectedDate || undefined} 
-              onReflectionChange={handleReflectionChange}
-            />
+            {/* Daily Reflection - Bottom Half */}
+            <div className="flex-1 min-h-0">
+              <DailyReflection 
+                className="h-full"
+                date={selectedDate || undefined} 
+                onReflectionChange={handleReflectionChange}
+              />
+            </div>
           </div>
         </div>
       </main>

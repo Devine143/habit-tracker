@@ -35,8 +35,8 @@ export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressCh
   }, [chartData]);
 
   return (
-    <Card className={`w-full h-fit ${className}`}>
-      <CardHeader className="pb-3">
+    <Card className={`w-full flex flex-col ${className}`}>
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-blue-600" />
@@ -48,9 +48,9 @@ export function ProgressChart({ className = '', refreshTrigger = 0 }: ProgressCh
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 flex-1 flex flex-col min-h-0">
         {chartData.length > 0 ? (
-          <div className="h-40">
+          <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
