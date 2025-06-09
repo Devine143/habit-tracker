@@ -9,6 +9,9 @@ export function useHabits() {
     // Check for new day and load habits
     const loadedHabits = HabitStorage.checkAndResetForNewDay();
     setHabits(loadedHabits);
+    
+    // Initialize test data for demonstration
+    HabitStorage.initializeTestData();
   }, []);
 
   const addHabit = (habitData: InsertHabit) => {

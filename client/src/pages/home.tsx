@@ -11,6 +11,7 @@ import { HabitCalendar } from '@/components/habit-calendar';
 export default function Home() {
   const { habits, addHabit, toggleHabit, deleteHabit, stats } = useHabits();
   const [habitToDelete, setHabitToDelete] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const handleAddHabit = (name: string) => {
     const today = new Date().toDateString();

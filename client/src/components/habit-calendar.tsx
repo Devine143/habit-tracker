@@ -6,9 +6,10 @@ import { HabitStorage } from '@/lib/habit-storage';
 
 interface HabitCalendarProps {
   className?: string;
+  onDateSelect?: (date: string) => void;
 }
 
-export function HabitCalendar({ className = '' }: HabitCalendarProps) {
+export function HabitCalendar({ className = '', onDateSelect }: HabitCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const calendarData = useMemo(() => {
@@ -38,6 +39,7 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
       const date = new Date(year, month, day);
       const dateStr = date.toDateString();
       const dayData = monthData.find(d => d.date === dateStr);
+      const hasReflection = HabitStorage.getDailyNote(dateStr) !== undefined;
       
       days.push({
         date,
@@ -46,7 +48,8 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
         total: dayData?.total || 0,
         rate: dayData?.rate || 0,
         isToday: dateStr === new Date().toDateString(),
-        isFuture: date > new Date()
+        isFuture: date > new Date(),
+        hasReflection
       });
     }
     
@@ -132,7 +135,7 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
               {dayData ? (
                 <div
                   className={`
-                    w-full h-full rounded flex flex-col items-center justify-center text-xs font-medium cursor-pointer
+                    w-full h-full rounded flex flex-col items-center justify-center text-xs font-medium cursor-pointer relative
                     ${getCompletionColor(dayData.rate, dayData.isFuture)}
                     ${dayData.isToday ? 'ring-2 ring-purple-600 ring-inset' : ''}
                     transition-colors duration-200 hover:opacity-80
@@ -140,14 +143,18 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
                   title={
                     dayData.isFuture 
                       ? `${dayData.day} - Future date`
-                      : `${dayData.day} - ${dayData.completed}/${dayData.total} habits (${dayData.rate}%)`
+                      : `${dayData.day} - ${dayData.completed}/${dayData.total} habits (${dayData.rate}%)${dayData.hasReflection ? ' • Has reflection' : ''}`
                   }
+                  onClick={() => onDateSelect?.(dayData.date.toDateString())}
                 >
                   <span className="text-[11px] font-semibold">{dayData.day}</span>
                   {!dayData.isFuture && dayData.total > 0 && (
                     <span className="text-[9px] leading-none opacity-75">
                       {dayData.rate}%
                     </span>
+                  )}
+                  {dayData.hasReflection && (
+                    <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-blue-500 rounded-full"></div>
                   )}
                 </div>
               ) : (

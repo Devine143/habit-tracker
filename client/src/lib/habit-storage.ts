@@ -214,4 +214,63 @@ export class HabitStorage {
     
     return results;
   }
+
+  // Initialize with test data for demonstration
+  static initializeTestData(): void {
+    const existingNotes = this.getDailyNotes();
+    const existingCompletions = this.getHabitCompletions();
+    
+    // Only add test data if none exists
+    if (existingNotes.length === 0) {
+      const today = new Date();
+      const testNotes: DailyNote[] = [];
+      
+      // Add notes for the past few days
+      for (let i = 1; i <= 5; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toDateString();
+        
+        testNotes.push({
+          id: Date.now() + i,
+          date: dateStr,
+          note: `Day ${i} reflection: Had a productive day working on my habits. ${i === 1 ? 'Felt really motivated today!' : i === 2 ? 'Struggled a bit but pushed through.' : i === 3 ? 'Amazing progress on my goals.' : i === 4 ? 'Learned something new about consistency.' : 'Feeling grateful for the journey.'}`,
+          createdAt: date.toISOString(),
+          updatedAt: date.toISOString(),
+        });
+      }
+      
+      this.saveDailyNotes(testNotes);
+    }
+    
+    // Add some test completion data if none exists
+    if (existingCompletions.length === 0 && this.getHabits().length > 0) {
+      const habits = this.getHabits();
+      const testCompletions: HabitCompletion[] = [];
+      const today = new Date();
+      
+      for (let i = 0; i <= 10; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toDateString();
+        
+        habits.forEach((habit, habitIndex) => {
+          // Create some random completion pattern
+          const shouldComplete = Math.random() > 0.3; // 70% chance of completion
+          
+          if (shouldComplete) {
+            testCompletions.push({
+              id: Date.now() + i * 1000 + habitIndex,
+              habitId: habit.id,
+              date: dateStr,
+              completed: true,
+              completedAt: date.toISOString(),
+            });
+          }
+        });
+      }
+      
+      this.saveHabitCompletions(testCompletions);
+    }
+  }
 }
