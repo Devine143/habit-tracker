@@ -27,9 +27,13 @@ export function useDatabaseNotes() {
   });
 
   // Helper functions
-  const saveNote = (noteData: Omit<InsertDailyNote, 'userId'>) => {
-    saveNoteMutation.mutate(noteData);
-    return noteData as DailyNote; // Return immediately for optimistic updates
+  const saveNote = async (noteData: Omit<InsertDailyNote, 'userId'>) => {
+    return new Promise((resolve, reject) => {
+      saveNoteMutation.mutate(noteData, {
+        onSuccess: (data) => resolve(data),
+        onError: (error) => reject(error),
+      });
+    });
   };
 
   const getDailyNote = (date: string) => {
