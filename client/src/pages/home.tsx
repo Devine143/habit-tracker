@@ -66,9 +66,9 @@ export default function Home() {
 
         {/* Main Content Grid */}
         {habits.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
             {/* Left Column - Habits List */}
-            <div className="space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               {/* Habits List */}
               <div className="space-y-3">
                 {habits.map(habit => (
@@ -90,8 +90,8 @@ export default function Home() {
             </div>
 
             {/* Right Column - Calendar */}
-            <div className="space-y-6">
-              <HabitCalendar />
+            <div className="lg:col-span-1">
+              <HabitCalendar className="h-fit" />
             </div>
           </div>
         )}

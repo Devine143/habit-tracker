@@ -82,46 +82,48 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
 
   return (
     <Card className={`w-full ${className}`}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-purple-600" />
-            Habit Calendar
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigateMonth('prev')}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <span className="text-sm font-medium min-w-[120px] text-center">
-              {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigateMonth('next')}
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+            <Calendar className="w-4 h-4 text-purple-600" />
+            <span className="text-sm font-semibold">Calendar</span>
           </div>
         </CardTitle>
+        <div className="flex items-center justify-between mt-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigateMonth('prev')}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronLeft className="w-3 h-3" />
+          </Button>
+          <span className="text-sm font-medium">
+            {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigateMonth('next')}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronRight className="w-3 h-3" />
+          </Button>
+        </div>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="pt-3">
         {/* Day headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
+        <div className="grid grid-cols-7 gap-0.5 mb-1">
           {dayNames.map(day => (
-            <div key={day} className="text-xs font-medium text-gray-500 text-center py-1">
+            <div key={day} className="text-[10px] font-medium text-gray-400 text-center py-1">
               {day}
             </div>
           ))}
         </div>
         
         {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-0.5">
           {calendarData.map((dayData, index) => (
             <div
               key={index}
@@ -130,10 +132,10 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
               {dayData ? (
                 <div
                   className={`
-                    w-full h-full rounded-lg flex flex-col items-center justify-center text-xs font-medium
+                    w-full h-full rounded flex flex-col items-center justify-center text-xs font-medium cursor-pointer
                     ${getCompletionColor(dayData.rate, dayData.isFuture)}
-                    ${dayData.isToday ? 'ring-2 ring-purple-600' : ''}
-                    transition-colors duration-200
+                    ${dayData.isToday ? 'ring-2 ring-purple-600 ring-inset' : ''}
+                    transition-colors duration-200 hover:opacity-80
                   `}
                   title={
                     dayData.isFuture 
@@ -141,9 +143,9 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
                       : `${dayData.day} - ${dayData.completed}/${dayData.total} habits (${dayData.rate}%)`
                   }
                 >
-                  <span className="text-xs">{dayData.day}</span>
+                  <span className="text-[11px] font-semibold">{dayData.day}</span>
                   {!dayData.isFuture && dayData.total > 0 && (
-                    <span className="text-[10px] leading-none mt-0.5">
+                    <span className="text-[9px] leading-none opacity-75">
                       {dayData.rate}%
                     </span>
                   )}
@@ -156,22 +158,22 @@ export function HabitCalendar({ className = '' }: HabitCalendarProps) {
         </div>
         
         {/* Legend */}
-        <div className="mt-4 flex items-center justify-center gap-4 text-xs">
+        <div className="mt-3 flex items-center justify-center gap-3 text-[10px]">
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-red-100"></div>
-            <span className="text-gray-600">0%</span>
+            <div className="w-2 h-2 rounded bg-red-100"></div>
+            <span className="text-gray-500">0%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-orange-100"></div>
-            <span className="text-gray-600">&lt;50%</span>
+            <div className="w-2 h-2 rounded bg-orange-100"></div>
+            <span className="text-gray-500">&lt;50%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-yellow-100"></div>
-            <span className="text-gray-600">&lt;80%</span>
+            <div className="w-2 h-2 rounded bg-yellow-100"></div>
+            <span className="text-gray-500">&lt;80%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-green-100"></div>
-            <span className="text-gray-600">80%+</span>
+            <div className="w-2 h-2 rounded bg-green-100"></div>
+            <span className="text-gray-500">80%+</span>
           </div>
         </div>
       </CardContent>
