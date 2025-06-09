@@ -141,6 +141,7 @@ export default function Home() {
                     const todayCompletion = completions.find((c: any) => 
                       c.habitId === habit.id && c.date === today
                     );
+
                     const habitWithTodayCompletion = {
                       ...habit,
                       completed: todayCompletion?.completed || false
