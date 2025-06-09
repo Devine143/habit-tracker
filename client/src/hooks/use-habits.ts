@@ -6,20 +6,17 @@ export function useHabits() {
   const [habits, setHabits] = useState<Habit[]>([]);
 
   useEffect(() => {
+    // Clear test data that's causing percentage calculation issues
+    HabitStorage.clearAllData();
+    
     // Check for new day and load habits
     const loadedHabits = HabitStorage.checkAndResetForNewDay();
     setHabits(loadedHabits);
-    
-    // Initialize test data for demonstration
-    HabitStorage.initializeTestData();
   }, []);
 
   const addHabit = (habitData: InsertHabit) => {
     const newHabit = HabitStorage.addHabit(habitData);
     setHabits(prev => [...prev, newHabit]);
-    
-    // Initialize test completion data when first habit is added
-    HabitStorage.initializeTestCompletions();
   };
 
   const toggleHabit = (habitId: number) => {

@@ -179,9 +179,15 @@ export class HabitStorage {
     const habits = this.getHabits();
     const completions = this.getHabitCompletions();
     
-    const completedCount = completions.filter(c => 
-      c.date === date && c.completed
-    ).length;
+    // Only count unique habit completions for the date
+    const habitIds = new Set();
+    const completedCount = completions.filter(c => {
+      if (c.date === date && c.completed && !habitIds.has(c.habitId)) {
+        habitIds.add(c.habitId);
+        return true;
+      }
+      return false;
+    }).length;
     
     return {
       completed: completedCount,
@@ -243,38 +249,11 @@ export class HabitStorage {
     }
   }
 
-  // Initialize test completion data only when habits exist
-  static initializeTestCompletions(): void {
-    const existingCompletions = this.getHabitCompletions();
-    const habits = this.getHabits();
-    
-    // Add some test completion data if none exists and we have habits
-    if (existingCompletions.length === 0 && habits.length > 0) {
-      const testCompletions: HabitCompletion[] = [];
-      const today = new Date();
-      
-      for (let i = 0; i <= 10; i++) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toDateString();
-        
-        habits.forEach((habit, habitIndex) => {
-          // Create some random completion pattern
-          const shouldComplete = Math.random() > 0.3; // 70% chance of completion
-          
-          if (shouldComplete) {
-            testCompletions.push({
-              id: Date.now() + i * 1000 + habitIndex,
-              habitId: habit.id,
-              date: dateStr,
-              completed: true,
-              completedAt: date.toISOString(),
-            });
-          }
-        });
-      }
-      
-      this.saveHabitCompletions(testCompletions);
-    }
+  // Clear all data - useful for resetting the app
+  static clearAllData(): void {
+    localStorage.removeItem(this.HABITS_KEY);
+    localStorage.removeItem(this.CURRENT_DATE_KEY);
+    localStorage.removeItem(this.DAILY_NOTES_KEY);
+    localStorage.removeItem(this.HABIT_COMPLETIONS_KEY);
   }
 }
