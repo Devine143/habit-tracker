@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,10 +18,11 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
   const [noteText, setNoteText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   
-  const targetDate = date || new Date().toDateString();
-  const isToday = targetDate === new Date().toDateString();
   const { getNoteForDate, saveNote } = useDailyNotes();
   const { toast } = useToast();
+  
+  const targetDate = date || new Date().toDateString();
+  const isToday = targetDate === new Date().toDateString();
 
   useEffect(() => {
     const existingNote = getNoteForDate(targetDate);
@@ -30,7 +31,7 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
     setIsEditing(false);
   }, [targetDate, getNoteForDate]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (noteText.trim() === '') {
       toast({
         title: "Empty note",
@@ -62,15 +63,15 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [noteText, targetDate, saveNote, onReflectionChange, toast]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     const existingNote = getNoteForDate(targetDate);
     setNoteText(existingNote?.note || '');
     setIsEditing(false);
-  };
+  }, [getNoteForDate, targetDate]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -78,7 +79,7 @@ export function DailyReflection({ date, className = '', onReflectionChange }: Da
       month: 'long',
       day: 'numeric'
     });
-  };
+  }, []);
 
   const hasNote = noteText.trim() !== '';
 
